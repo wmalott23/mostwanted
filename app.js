@@ -214,14 +214,21 @@ function searchByTrait(people) {
 }
 
 function searchByTraits(people) {
-    let firstName = promptFor("What is the person's first name?", chars);
-    let lastName = promptFor("What is the person's last name?", chars);
-
-    // The foundPerson value will be of type Array. Recall that .filter() ALWAYS returns an array.
-    let foundPerson = people.filter(function (person) {
-        if (person.firstName === firstName && person.lastName === lastName) {
-            return true;
+    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eye color', 'occupation': Please enter like: gender male;dob 1/1/1994", chars).toLowerCase();
+    let currentInput = '';
+    let traitArray = [];
+    let inputArray = [];
+    for(let i = 0; i<input.length; i++);
+        if(input[i] != " ") currentInput = currentInput + input[i];
+        if(input[i] == " ") traitArray.push(currentInput);
+        if(input[i] == ';') inputArray.push(currentInput);
+        if(i == input.length-1){
+            currentInput = currentInput + input[i];
+            inputArray.push(currentInput);
         }
+    let foundPeople = people.filter(function (person) {    
+        for(let i = 0; i<traitArray.length; i++);
+            if(person.traitArray[i] == inputArray[i]) return true;
     });
-    return foundPerson;
+    return foundPeople;
 }
