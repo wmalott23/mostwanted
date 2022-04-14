@@ -286,29 +286,41 @@ function findPersonFamily(person, people){
     })}\n`;
     return personInfo;
 }
+// function findPersonDescendants(person, people){
+//     let firstGen = people.filter(function(el){
+//         if (el.parents.includes(person.id)) {
+//             return true;
+//     }})
+//     let secondGen = [];
+//     for (let index = 0; index < firstGen.length; index++) {
+//         secondGen = people.filter(function(el){
+//             if (el.parents.includes(firstGen[index].id)) {
+//                 return true;
+//     }})}
+//     let firstGenNames = firstGen.map(function(el){
+//         return el.firstName +' '+ el.lastName
+//     })
+//     let secondGenNames = secondGen.map(function(el){
+//         return el.firstName +' '+ el.lastName
+//     })
+//     return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
+
 function findPersonDescendants(person, people){
-    let firstGen = people.filter(function(el){
-        if (el.parents.includes(person.id)) {
-            return true;
-            
-        }})
-    let secondGen = [];
-    for (let index = 0; index < firstGen.length; index++) {
-        secondGen = people.filter(function(el){
-            if (el.parents.includes(firstGen[index].id)) {
-                return true;
+    let descendants = [];
+    let generation = people.filter(function(el){
+        counter = 0;
+        for(let i = 0; i<person.length; i++){
+            if (el.parents.includes(person[i].id)) counter++;
+        }
+        if(counter > 0) return true;
+    if(generation.length>0){
+        for(let i = 0; i<person.length; i++){
+            descendants.push(generation[i])
+        }
+        findPersonDescendants(generation, people)
     }
     })
-}
-
-    let firstGenNames = firstGen.map(function(el){
-        return el.firstName +' '+ el.lastName
-    }
-    )
-    let secondGenNames = secondGen.map(function(el){
-        return el.firstName +' '+ el.lastName
-    }
-    )
-
-
-    return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
+    let descendantsNames = descendants.map(function(el){
+        return descendants.firstNames + descendants.lastNames;
+    })
+    return `Desecendants: ${descendantsNames} `}
