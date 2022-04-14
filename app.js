@@ -193,7 +193,7 @@ function chars(input) {
 
 
 function searchByTrait(people) {
-    let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eye color', 'occupation'?", chars).toLowerCase();
+    let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars).toLowerCase();
     let traitSearch = '';
 
 
@@ -204,7 +204,7 @@ function searchByTrait(people) {
         if(inputTrait == 'height') traitSearch = person.height;
         if(inputTrait == 'weight') traitSearch = person.weight;
         if(inputTrait == 'date of birth') traitSearch = person.dob;
-        if(inputTrait == 'eye color') traitSearch = person.eyeColor;
+        if(inputTrait == 'eyecolor') traitSearch = person.eyeColor;
         if(inputTrait == 'occupation') traitSearch = person.occupation;
         if (traitSearch == trait) {
             return true;
@@ -214,10 +214,11 @@ function searchByTrait(people) {
 }
 
 function searchByTraits(people) {
-    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyeColor', 'occupation': Please enter like: gender male;dob 1/1/1994", chars);
+    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyecolor', 'occupation': Please enter like: gender male;dob 1/1/1994", chars).toLowerCase();
     let currentInput = '';
     let traitArray = [];
     let inputArray = [];
+    let traitSearch = '';
     for(let i = 0; i<input.length; i++){
         if(input[i] != " " && input[i] != ";") currentInput = currentInput + input[i];
         if(input[i] == " "){
@@ -228,15 +229,17 @@ function searchByTraits(people) {
             inputArray.push(currentInput);
             currentInput = '';
         }}
-    let foundPeople = people.filter(function (person) {    
+    let foundPeople = people.filter(function (person) {   
+        let counter = 0 
         for(let i = 0; i<traitArray.length; i++){
             if(traitArray[i] == 'gender') traitSearch = person.gender;
             if(traitArray[i] == 'height') traitSearch = person.height;
             if(traitArray[i] == 'weight') traitSearch = person.weight;
             if(traitArray[i] == 'date of birth') traitSearch = person.dob;
-            if(traitArray[i] == 'eye color') traitSearch = person.eyeColor;
+            if(traitArray[i] == 'eyecolor') traitSearch = person.eyeColor;
             if(traitArray[i] == 'occupation') traitSearch = person.occupation;
-            if(traitSearch == inputArray[i]) return true;
+            if(traitSearch == inputArray[i]) counter++;
+        if(counter == traitArray.length) return true;
     }});
     return foundPeople;
 }
