@@ -308,19 +308,20 @@ function findPersonFamily(person, people){
 function findPersonDescendants(person, people){
     let descendants = [];
     let generation = people.filter(function(el){
-    let counter = 0;
+        let counter = 0;
         for(let i = 0; i<person.length; i++){
             if (el.parents.includes(person[i].id)) counter++;
         }
         if(counter > 0) return true;
+    })
     if(generation.length>0){
         for(let i = 0; i<person.length; i++){
             descendants.push(generation[i])
         }
         findPersonDescendants(generation, people)
     }
-    })
     let descendantsNames = descendants.map(function(el){
         return descendants.firstNames + descendants.lastNames;
     })
-    return `Desecendants: ${descendantsNames} `}
+    return `Desecendants: ${descendantsNames}`;
+}
