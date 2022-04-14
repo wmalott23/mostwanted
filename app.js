@@ -31,13 +31,20 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            searchResults = searchByTraits(people);
-            break;
+        let searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
+        let searchResults;
+        switch (searchType) {
+            case 'one':
+                searchResults = searchByTrait(people);
+                break;
+            case 'multiple':
+                searchResults = searchByTraits(people);
+                break
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
             app(people);
             break;
-    }
+    }}
     // Calls the mainMenu() only AFTER we find the SINGLE PERSON
     mainMenu(searchResults, people);
 }
@@ -123,8 +130,7 @@ function searchByName(people) {
  */
 function displayPeople(people) {
     alert(
-        people
-            .map(function (person) {
+        people.map(function (person) {
                 return `${person.firstName} ${person.lastName}`;
             })
             .join("\n")
@@ -184,3 +190,37 @@ function chars(input) {
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+
+
+function searchByTrait(people) {
+    let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eye color', 'occupation'?", chars).toLowerCase();
+    let traitSearch = '';
+    if(inputTrait == 'gender') traitSearch = person.gender;
+    if(inputTrait == 'height') traitSearch = person.height;
+    if(inputTrait == 'weight') traitSearch = person.weight;
+    if(inputTrait == 'date of birth') traitSearch = person.dob;
+    if(inputTrait == 'eye color') traitSearch = person.eyeColor;
+    if(inputTrait == 'occupation') traitSearch = person.occupation;
+
+    let trait = promptFor(`What would you like to search for in ${traitSearch}`, chars).toLowerCase();
+
+    let foundPeople = people.filter(function (person) {
+        if (traitSearch === trait) {
+            return true;
+        }
+    });
+    return foundPeople;
+}
+
+function searchByTraits(people) {
+    let firstName = promptFor("What is the person's first name?", chars);
+    let lastName = promptFor("What is the person's last name?", chars);
+
+    // The foundPerson value will be of type Array. Recall that .filter() ALWAYS returns an array.
+    let foundPerson = people.filter(function (person) {
+        if (person.firstName === firstName && person.lastName === lastName) {
+            return true;
+        }
+    });
+    return foundPerson;
+}
