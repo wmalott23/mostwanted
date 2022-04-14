@@ -308,7 +308,7 @@ function findPersonFamily(person, people){
 function findPersonDescendants(person, people){
     let descendants = [];
     let generation = people.filter(function(el){
-        counter = 0;
+    let counter = 0;
         for(let i = 0; i<person.length; i++){
             if (el.parents.includes(person[i].id)) counter++;
         }
