@@ -30,21 +30,22 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
+            searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
+            switch (searchType) {
+                case 'one':
+                    searchResults = searchByTrait(people);
+                    break;
+                case 'multiple':
+                    searchResults = searchByTraits(people);
+                    break
+                default:
+                    // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
+                    app(people);
+                    break;
+                }
             break;
     }
-    searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
-    switch (searchType) {
-        case 'one':
-            searchResults = searchByTrait(people);
-            break;
-        case 'multiple':
-            searchResults = searchByTraits(people);
-            break
-        default:
-            // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
-            app(people);
-            break;
-    }
+   
     // Calls the mainMenu() only AFTER we find the SINGLE PERSON
     mainMenu(searchResults, people);
 }
@@ -73,7 +74,10 @@ function mainMenu(person, people) {
         case "info":
             //! TODO #1: Utilize the displayPerson function //////////////////////////////////////////
             // HINT: Look for a person-object stringifier utility function to help
-            let personInfo = displayPerson(person[0]);
+            // find person by filtered item
+            // show persons traits
+            let personInfo = displayPerson(person[0])
+
             alert(personInfo);
             break;
         case "family":
@@ -146,6 +150,16 @@ function displayPeople(people) {
 function displayPerson(person) {
     let personInfo = `First Name: ${person.firstName}\n`;
     personInfo += `Last Name: ${person.lastName}\n`;
+    personInfo+=` gender: ${person.gender}\n`;
+    personInfo+=` dob: ${person.dob}\n`;
+    personInfo+=` height: ${person.height}\n`;
+    personInfo+=` weight: ${person.weight}\n`;
+    personInfo+=` eye Color: ${person.eyeColor}\n`;
+    personInfo+=` occupation: ${person.occupation}\n`;
+    personInfo+=` parents: ${person.parents}\n`;
+    personInfo+=` current Spouse: ${person.currentSpouse}\n`;
+    
+
     //! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
     alert(personInfo);
 }
@@ -243,3 +257,5 @@ function searchByTraits(people) {
     }});
     return foundPeople;
 }
+
+
