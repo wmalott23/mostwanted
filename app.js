@@ -23,7 +23,6 @@ function app(people) {
         yesNo
     ).toLowerCase();
     let searchResults;
-    // Routes our application based on the user's input
     switch (searchType) {
         case "yes":
             searchResults = searchByName(people);
@@ -31,20 +30,21 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-        let searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
-        let searchResults;
-        switch (searchType) {
-            case 'one':
-                searchResults = searchByTrait(people);
-                break;
-            case 'multiple':
-                searchResults = searchByTraits(people);
-                break
-            default:
-                // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
-                app(people);
-                break;
-    }}
+            break;
+    }
+    searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
+    switch (searchType) {
+        case 'one':
+            searchResults = searchByTrait(people);
+            break;
+        case 'multiple':
+            searchResults = searchByTraits(people);
+            break
+        default:
+            // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
+            app(people);
+            break;
+    }
     // Calls the mainMenu() only AFTER we find the SINGLE PERSON
     mainMenu(searchResults, people);
 }
