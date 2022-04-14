@@ -40,10 +40,10 @@ function app(people) {
             case 'multiple':
                 searchResults = searchByTraits(people);
                 break
-        default:
-            // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
-            app(people);
-            break;
+            default:
+                // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
+                app(people);
+                break;
     }}
     // Calls the mainMenu() only AFTER we find the SINGLE PERSON
     mainMenu(searchResults, people);
@@ -195,17 +195,18 @@ function chars(input) {
 function searchByTrait(people) {
     let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eye color', 'occupation'?", chars).toLowerCase();
     let traitSearch = '';
-    if(inputTrait == 'gender') traitSearch = person.gender;
-    if(inputTrait == 'height') traitSearch = person.height;
-    if(inputTrait == 'weight') traitSearch = person.weight;
-    if(inputTrait == 'date of birth') traitSearch = person.dob;
-    if(inputTrait == 'eye color') traitSearch = person.eyeColor;
-    if(inputTrait == 'occupation') traitSearch = person.occupation;
 
-    let trait = promptFor(`What would you like to search for in ${traitSearch}`, chars).toLowerCase();
 
-    let foundPeople = people.filter(function (person) {
-        if (traitSearch === trait) {
+    let trait = promptFor(`What would you like to search for in ${inputTrait}`, chars).toLowerCase();
+
+    let foundPeople = people.filter(function (person) {    
+        if(inputTrait == 'gender') traitSearch = person.gender;
+        if(inputTrait == 'height') traitSearch = person.height;
+        if(inputTrait == 'weight') traitSearch = person.weight;
+        if(inputTrait == 'date of birth') traitSearch = person.dob;
+        if(inputTrait == 'eye color') traitSearch = person.eyeColor;
+        if(inputTrait == 'occupation') traitSearch = person.occupation;
+        if (traitSearch == trait) {
             return true;
         }
     });
