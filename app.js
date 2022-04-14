@@ -214,21 +214,29 @@ function searchByTrait(people) {
 }
 
 function searchByTraits(people) {
-    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eye color', 'occupation': Please enter like: gender male;dob 1/1/1994", chars).toLowerCase();
+    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyeColor', 'occupation': Please enter like: gender male;dob 1/1/1994", chars);
     let currentInput = '';
     let traitArray = [];
     let inputArray = [];
-    for(let i = 0; i<input.length; i++);
-        if(input[i] != " ") currentInput = currentInput + input[i];
-        if(input[i] == " ") traitArray.push(currentInput);
-        if(input[i] == ';') inputArray.push(currentInput);
-        if(i == input.length-1){
-            currentInput = currentInput + input[i];
-            inputArray.push(currentInput);
+    for(let i = 0; i<input.length; i++){
+        if(input[i] != " " && input[i] != ";") currentInput = currentInput + input[i];
+        if(input[i] == " "){
+            traitArray.push(currentInput);
+            currentInput = '';
         }
+        if(input[i] == ';' || i == input.length-1){
+            inputArray.push(currentInput);
+            currentInput = '';
+        }}
     let foundPeople = people.filter(function (person) {    
-        for(let i = 0; i<traitArray.length; i++);
-            if(person.traitArray[i] == inputArray[i]) return true;
-    });
+        for(let i = 0; i<traitArray.length; i++){
+            if(traitArray[i] == 'gender') traitSearch = person.gender;
+            if(traitArray[i] == 'height') traitSearch = person.height;
+            if(traitArray[i] == 'weight') traitSearch = person.weight;
+            if(traitArray[i] == 'date of birth') traitSearch = person.dob;
+            if(traitArray[i] == 'eye color') traitSearch = person.eyeColor;
+            if(traitArray[i] == 'occupation') traitSearch = person.occupation;
+            if(traitSearch == inputArray[i]) return true;
+    }});
     return foundPeople;
 }
