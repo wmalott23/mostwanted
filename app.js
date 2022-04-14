@@ -307,10 +307,13 @@ function findPersonFamily(person, people){
 
 function findPersonDescendants(person, people){
     let descendants = [];
+    let group = [];
+    if(!Array.isArray(person)) group = Array(person);
+    else group = person;
     let generation = people.filter(function(el){
         let counter = 0;
-        for(let i = 0; i<person.length; i++){
-            if (el.parents.includes(person[i].id)) counter++;
+        for(let i = 0; i<group.length; i++){
+            if (el.parents.includes(group[i].id)) counter++;
         }
         if(counter > 0) return true;
     })
