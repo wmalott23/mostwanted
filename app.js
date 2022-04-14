@@ -259,16 +259,14 @@ function findPersonFamily(person, people){
     let spouse = people.filter(function(el){
         if(el.id == person.currentSpouse) return true;
     })
-    let spouseFullName = `${spouse.FirstName} ${spouse.lastName}`
+    let spouseFullName = `${spouse[0].firstName}  ${spouse[0].lastName}`
+
     let parentIDArray = [];
     for(let i = 0; i<person.parents.length; i++){
         parentIDArray.push(person.parents[i]);
     }
     let parents = people.filter(function(el){
-        let counter = 0;
-        for(let i = 0; i<parentIDArray.length; i++)
-            if(parentIDArray.includes(el.id[i])) counter++;
-        if(counter > 0) return true;
+        if(parentIDArray.includes(el.id)) return true;
     })
     let siblings = people.filter(function(el){
         let counter = 0;
@@ -288,3 +286,29 @@ function findPersonFamily(person, people){
     })}\n`;
     return personInfo;
 }
+function findPersonDescendants(person, people){
+    let firstGen = people.filter(function(el){
+        if (el.parents.includes(person.id)) {
+            return true;
+            
+        }})
+    let secondGen = [];
+    for (let index = 0; index < firstGen.length; index++) {
+        secondGen = people.filter(function(el){
+            if (el.parents.includes(firstGen[index].id)) {
+                return true;
+    }
+    })
+}
+
+    let firstGenNames = firstGen.map(function(el){
+        return el.firstName +' '+ el.lastName
+    }
+    )
+    let secondGenNames = secondGen.map(function(el){
+        return el.firstName +' '+ el.lastName
+    }
+    )
+
+
+    return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
