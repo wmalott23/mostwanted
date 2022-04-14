@@ -158,9 +158,6 @@ function displayPerson(person) {
     personInfo+=` occupation: ${person.occupation}\n`;
     personInfo+=` parents: ${person.parents}\n`;
     personInfo+=` current Spouse: ${person.currentSpouse}\n`;
-    
-
-    //! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
     alert(personInfo);
 }
 // End of displayPerson()
@@ -258,4 +255,36 @@ function searchByTraits(people) {
     return foundPeople;
 }
 
-
+function findPersonFamily(person, people){
+    let spouse = people.filter(function(el){
+        if(el.id == person.currentSpouse) return true;
+    })
+    let spouseFullName = `${spouse.FirstName} ${spouse.lastName}`
+    let parentIDArray = [];
+    for(let i = 0; i<person.parents.length; i++){
+        parentIDArray.push(person.parents[i]);
+    }
+    let parents = people.filter(function(el){
+        let counter = 0;
+        for(let i = 0; i<parentIDArray.length; i++)
+            if(parentIDArray.includes(el.id[i])) counter++;
+        if(counter > 0) return true;
+    })
+    let siblings = people.filter(function(el){
+        let counter = 0;
+        for(let i = 0; i<el.parents.length; i++)
+            if(parentIDArray.includes(el.parents[i])) counter++;
+        if(counter > 0) return true;
+    })
+    let personInfo = ""
+    personInfo+=`Current Spouse: ${spouseFullName}\n`;
+    personInfo+=`Parents: ${parents.map(function(el){
+        let fullName = `${el.firstName} ${el.lastName}`
+        return fullName;
+    })}\n`;
+    personInfo+=`Siblings: ${siblings.map(function(el){
+        let fullName = `${el.firstName} ${el.lastName}`
+        return fullName;
+    })}\n`;
+    return personInfo;
+}
