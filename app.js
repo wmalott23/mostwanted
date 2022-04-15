@@ -30,7 +30,8 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars).toLowerCase();
+            let choicesArray = ['one', 'multiple'];
+            searchType = promptFor("Would you like to search by one trait or multiple? Enter 'one' or 'multiple'", chars, choicesArray).toLowerCase();
             switch (searchType) {
                 case 'one':
                     searchResults = searchByTrait(people);
@@ -66,9 +67,10 @@ function mainMenu(person, people) {
         // Restarts app() from the very beginning
         return app(people);
     }
-    let displayOption = prompt(
+    choicesArray = ['info', 'family', 'descendants', 'restart', 'quit']
+    let displayOption = promptFor(
         `Found ${person[0].firstName} ${person[0].lastName}. Do you want to know their 'info', 'family', or 'descendants'?\nType the option you want or type 'restart' or 'quit'.`
-    );
+    , chars, choicesArray);
     // Routes our application based on the user's input
     switch (displayOption) {
         case "info":
@@ -113,8 +115,14 @@ function mainMenu(person, people) {
  * @returns {Array}             An array containing the person-object (or empty array if no match)
  */
 function searchByName(people) {
-    let firstName = promptFor("What is the person's first name?", chars);
-    let lastName = promptFor("What is the person's last name?", chars);
+    let allFirsts = people.map(function(el){
+        return el.firstName
+    })
+    let allLasts = people.map(function(el){
+        return el.lastName
+    })
+    let firstName = promptFor("What is the person's first name?", chars, allFirsts);
+    let lastName = promptFor("What is the person's last name?", chars, allLasts);
 
     // The foundPerson value will be of type Array. Recall that .filter() ALWAYS returns an array.
     let foundPerson = people.filter(function (person) {
@@ -170,10 +178,10 @@ function displayPerson(person) {
  * @param {Function} valid      A callback function used to validate basic user input.
  * @returns {String}            The valid string input retrieved from the user.
  */
-function promptFor(question, valid) {
+function promptFor(question, valid, choicesArray) {
     do {
         var response = prompt(question).trim();
-    } while (!response || !valid(response));
+    } while (!response || !valid(response, choicesArray));
     return response;
 }
 // End of promptFor()
@@ -194,13 +202,10 @@ function yesNo(input) {
  * @param {String} input        A string.
  * @returns {Boolean}           Default validation -- no logic yet.
  */
-function chars(input) {
-    String.isString(input)
-    test = prompt(`Are you happy with entering ${input}:(y/n)`)
-    if (test === 'y') {
-        return true
-    }
+function chars(input, choicesArray) {
+    if(choicesArray.includes(input)) return true;
     else{
+        alert(`${input} is not a valid entry`)
         return false
     }
    ; // Default validation only
@@ -212,7 +217,8 @@ function chars(input) {
 
 
 function searchByTrait(people) {
-    let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars).toLowerCase();
+    choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
+    let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars, choicesArray).toLowerCase();
     let traitSearch = '';
 
 
@@ -233,7 +239,8 @@ function searchByTrait(people) {
 }
 
 function searchByTraits(people) {
-    let input = promptFor("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyecolor', 'occupation': Please enter like: gender male;dob 1/1/1994", chars).toLowerCase();
+    choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
+    let input = prompt("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyecolor', 'occupation': Please enter like: gender male;dob 1/1/1994").toLowerCase();
     let currentInput = '';
     let traitArray = [];
     let inputArray = [];
@@ -248,6 +255,14 @@ function searchByTraits(people) {
             inputArray.push(currentInput);
             currentInput = '';
         }}
+    let counter = 0;
+    for(let i = 0; i<traitArray.length; i++){
+        if(choicesArray.includes(traitArray[i])) counter++;
+    if(counter != traitArray.length){
+        alert("One of the traits was invalid");
+        return searchByTraits(people)
+    }}
+    
     let foundPeople = people.filter(function (person) {   
         let counter = 0 
         for(let i = 0; i<traitArray.length; i++){
