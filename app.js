@@ -166,7 +166,7 @@ function displayPerson(person) {
     personInfo+=` occupation: ${person.occupation}\n`;
     personInfo+=` parents: ${person.parents}\n`;
     personInfo+=` current Spouse: ${person.currentSpouse}\n`;
-    alert(personInfo);
+    return personInfo;
 }
 // End of displayPerson()
 
@@ -257,11 +257,11 @@ function searchByTraits(people) {
     let counter = 0;
     for(let i = 0; i<traitArray.length; i++){
         if(choicesArray.includes(traitArray[i])) counter++;
+    }
     if(counter != traitArray.length){
         alert("One of the traits was invalid");
         return searchByTraits(people)
-    }}
-
+    }
     let foundPeople = people.filter(function (person) {   
         let counter = 0 
         for(let i = 0; i<traitArray.length; i++){
