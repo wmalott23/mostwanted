@@ -195,7 +195,15 @@ function yesNo(input) {
  * @returns {Boolean}           Default validation -- no logic yet.
  */
 function chars(input) {
-    return true; // Default validation only
+    String.isString(input)
+    test = prompt(`Are you happy with entering ${input}:(y/n)`)
+    if (test === 'y') {
+        return true
+    }
+    else{
+        return false
+    }
+   ; // Default validation only
 }
 // End of chars()
 
@@ -304,9 +312,9 @@ function findPersonFamily(person, people){
 //         return el.firstName +' '+ el.lastName
 //     })
 //     return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
-
+let descendants = [];
 function findPersonDescendants(person, people){
-    let descendants = [];
+    
     let group = [];
     if(!Array.isArray(person)) group = Array(person);
     else group = person;
@@ -318,13 +326,14 @@ function findPersonDescendants(person, people){
         if(counter > 0) return true;
     })
     if(generation.length>0){
-        for(let i = 0; i<person.length; i++){
+        for(let i = 0; i<generation.length; i++){
             descendants.push(generation[i])
         }
+        
         findPersonDescendants(generation, people)
     }
     let descendantsNames = descendants.map(function(el){
-        return descendants.firstNames + descendants.lastNames;
+        return el.firstName +' '+ el.lastName;
     })
     return `Desecendants: ${descendantsNames}`;
 }
