@@ -115,14 +115,17 @@ function mainMenu(person, people) {
  * @returns {Array}             An array containing the person-object (or empty array if no match)
  */
 function searchByName(people) {
-    let allFirsts = people.map(function(el){
-        return el.firstName
-    })
-    let allLasts = people.map(function(el){
-        return el.lastName
-    })
-    let firstName = promptFor("What is the person's first name?", chars, allFirsts);
-    let lastName = promptFor("What is the person's last name?", chars, allLasts);
+    let allFirst = []
+    for (let index = 0; index < people.length; index++) {
+        allFirst.push(people[index].firstName)
+     
+    }
+    let allLast = []
+    for (let index = 0; index < people.length; index++) {
+        allLast.push(people[index].lastName)
+    }
+    let firstName = promptFor("What is the person's first name?", chars, allFirst);
+    let lastName = promptFor("What is the person's last name?", chars, allLast);
 
     // The foundPerson value will be of type Array. Recall that .filter() ALWAYS returns an array.
     let foundPerson = people.filter(function (person) {
@@ -202,6 +205,7 @@ function yesNo(input) {
  * @param {String} input        A string.
  * @returns {Boolean}           Default validation -- no logic yet.
  */
+// check if the user's choice is within the Array returns true
 function chars(input, choicesArray) {
     return choicesArray.includes(input.toLowerCase());
     }
@@ -211,16 +215,15 @@ function chars(input, choicesArray) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
-
+// pulling in people data set
+// Allows user to filter by trait
 function searchByTrait(people) {
     let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars, choicesArray).toLowerCase();
     let traitSearch = '';
-
     let trait = prompt(`What would you like to search for in ${inputTrait}`).toLowerCase();
-
     let foundPeople = people.filter(function (person) {
-        if(inputTrait == 'gender') traitSearch = person.gender;
+        if(inputTrait == 'gender') traitSearch = person.gender; //filters people data set based on user input and returns person that matches user set
         if(inputTrait == 'height') traitSearch = person.height;
         if(inputTrait == 'weight') traitSearch = person.weight;
         if(inputTrait == 'date of birth') traitSearch = person.dob;
@@ -230,39 +233,39 @@ function searchByTrait(people) {
             return true;
         }
     });
-    if(typeof foundPeople[0] == "undefined"){
+    if(typeof foundPeople[0] == "undefined"){ // repeats function if nobody is found
         alert("Could not find anyone based on that input");
         return searchByTrait(people);
     }
-    return foundPeople;
+    return foundPeople; //returning person's info back to app function to display
 }
 
-function searchByTraits(people) {
+function searchByTraits(people) { //Search for person/persons by multiple traits 
     let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let input = prompt("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyecolor', 'occupation': Please enter like: gender male;dob 1/1/1994").toLowerCase();
     let currentInput = '';
     let traitArray = [];
     let inputArray = [];
     let traitSearch = '';
-    for(let i = 0; i<input.length; i++){
-        if(input[i] != " " && input[i] != ";") currentInput = currentInput + input[i];
-        if(input[i] == " "){
+    for(let i = 0; i<input.length; i++){//steps thru user input and  
+        if(input[i] != " " && input[i] != ";") currentInput = currentInput + input[i];//concat letters into a word
+        if(input[i] == " "){//pushes word before a space into trait array
             traitArray.push(currentInput);
             currentInput = '';
         }
-        if(input[i] == ';' || i == input.length-1){
+        if(input[i] == ';' || i == input.length-1){//pushes word before ; or the last word in the input into input array
             inputArray.push(currentInput);
             currentInput = '';
         }}
-    let counter = 0;
+    let counter = 0;// validates trait input against array
     for(let i = 0; i<traitArray.length; i++){
         if(choicesArray.includes(traitArray[i])) counter++;
     }
-    if(counter != traitArray.length){
+    if(counter != traitArray.length){//restarts function if invalid
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }
-    let foundPeople = people.filter(function (person) {   
+    let foundPeople = people.filter(function (person) {  //filters people based on user input traits 
         let counter = 0 
         for(let i = 0; i<traitArray.length; i++){
             if(traitArray[i] == 'gender') traitSearch = person.gender;
@@ -274,29 +277,26 @@ function searchByTraits(people) {
             if(traitSearch == inputArray[i]) counter++;
         if(counter == traitArray.length) return true;
     }});
-    return foundPeople;
+    return foundPeople;//returns persons info
 }
 
-function findPersonFamily(person, people){
-    let spouse = people.filter(function(el){
+function findPersonFamily(person, people){//receives person/object and people data set returns immediate family members
+    let spouse = people.filter(function(el){//finds spouse 
         if(el.id == person.currentSpouse) return true;
     })
-    let spouseFullName = `${spouse[0].firstName}  ${spouse[0].lastName}`
+    let spouseFullName = `${spouse[0].firstName}  ${spouse[0].lastName}`// makes spouse string 
 
-    let parentIDArray = [];
-    for(let i = 0; i<person.parents.length; i++){
-        parentIDArray.push(person.parents[i]);
-    }
-    let parents = people.filter(function(el){
+    let parentIDArray = person.parents;
+    let parents = people.filter(function(el){//filters people based on persons parent id
         if(parentIDArray.includes(el.id)) return true;
     })
-    let siblings = people.filter(function(el){
+    let siblings = people.filter(function(el){//filters people based on persons matching  parent id
         let counter = 0;
         for(let i = 0; i<el.parents.length; i++)
             if(parentIDArray.includes(el.parents[i])) counter++;
         if(counter > 0) return true;
     })
-    let personInfo = ""
+    let personInfo = "" //adds spouse parent and sibbling names to persons info
     personInfo+=`Current Spouse: ${spouseFullName}\n`;
     personInfo+=`Parents: ${parents.map(function(el){
         let fullName = `${el.firstName} ${el.lastName}`
@@ -306,7 +306,7 @@ function findPersonFamily(person, people){
         let fullName = `${el.firstName} ${el.lastName}`
         return fullName;
     })}\n`;
-    return personInfo;
+    return personInfo;//returns person info to be displayed
 }
 // function findPersonDescendants(person, people){
 //     let firstGen = people.filter(function(el){
@@ -327,7 +327,7 @@ function findPersonFamily(person, people){
 //     })
 //     return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
 let descendants = [];
-function findPersonDescendants(person, people){
+function findPersonDescendants(person, people){//takes in person/object and people/dataset and finds children and childrens children etc... until no more
     
     let group = [];
     if(!Array.isArray(person)) group = Array(person);
