@@ -114,26 +114,25 @@ function mainMenu(person, people) {
  * @param {Array} people        A collection of person objects.
  * @returns {Array}             An array containing the person-object (or empty array if no match)
  */
-function searchByName(people) {
-    let allFirst = []
-    for (let index = 0; index < people.length; index++) {
-        allFirst.push(people[index].firstName)
-     
+function searchByName(people) { // takes in people data set, prompts user for first and last name, and finds person with that name in data set
+    let allFirst = [] 
+    for (let index = 0; index < people.length; index++) { // finds all possible first names in an array for input validation
+        allFirst.push(people[index].firstName.toLowerCase())
     }
     let allLast = []
-    for (let index = 0; index < people.length; index++) {
-        allLast.push(people[index].lastName)
+    for (let index = 0; index < people.length; index++) { // finds all possible last names in an array for input validation
+        allLast.push(people[index].lastName.toLowerCase())
     }
     let firstName = promptFor("What is the person's first name?", chars, allFirst);
     let lastName = promptFor("What is the person's last name?", chars, allLast);
 
     // The foundPerson value will be of type Array. Recall that .filter() ALWAYS returns an array.
     let foundPerson = people.filter(function (person) {
-        if (person.firstName === firstName && person.lastName === lastName) {
+        if (person.firstName === firstName && person.lastName === lastName) { // filters people data set based on inputs
             return true;
         }
     });
-    return foundPerson;
+    return foundPerson; // returns foundPerson to be displayed
 }
 // End of searchByName()
 
@@ -181,11 +180,11 @@ function displayPerson(person) {
  * @param {Function} valid      A callback function used to validate basic user input.
  * @returns {String}            The valid string input retrieved from the user.
  */
-function promptFor(question, valid, choicesArray) {
+function promptFor(question, valid, choicesArray) { // receives a question, validation function, and array of correct responses
     do {
-        var response = prompt(question).trim();
-    } while (!response || !valid(response, choicesArray));
-    return response;
+        var response = prompt(question).trim(); //trims user input to question
+    } while (!response || !valid(response, choicesArray)); // loops question if input is not within array
+    return response; //returns validated input
 }
 // End of promptFor()
 
@@ -206,8 +205,8 @@ function yesNo(input) {
  * @returns {Boolean}           Default validation -- no logic yet.
  */
 // check if the user's choice is within the Array returns true
-function chars(input, choicesArray) {
-    return choicesArray.includes(input.toLowerCase());
+function chars(input, choicesArray) { // receives user input and array of choices, validates input against array of choices
+    return choicesArray.includes(input.toLowerCase()); //returns true or false to promptFor() if input is validated
     }
    ; // Default validation only
 // End of chars()
@@ -284,8 +283,6 @@ function findPersonFamily(person, people){//receives person/object and people da
     let spouse = people.filter(function(el){//finds spouse 
         if(el.id == person.currentSpouse) return true;
     })
-    let spouseFullName = `${spouse[0].firstName}  ${spouse[0].lastName}`// makes spouse string 
-
     let parentIDArray = person.parents;
     let parents = people.filter(function(el){//filters people based on persons parent id
         if(parentIDArray.includes(el.id)) return true;
@@ -297,12 +294,15 @@ function findPersonFamily(person, people){//receives person/object and people da
         if(counter > 0) return true;
     })
     let personInfo = "" //adds spouse parent and sibbling names to persons info
-    personInfo+=`Current Spouse: ${spouseFullName}\n`;
-    personInfo+=`Parents: ${parents.map(function(el){
+    personInfo+=`Current Spouse: ${spouse.map(function(el){ // adds spouse' name to person info string
         let fullName = `${el.firstName} ${el.lastName}`
         return fullName;
     })}\n`;
-    personInfo+=`Siblings: ${siblings.map(function(el){
+    personInfo+=`Parents: ${parents.map(function(el){// adds parent's name to person info string
+        let fullName = `${el.firstName} ${el.lastName}`
+        return fullName;
+    })}\n`;
+    personInfo+=`Siblings: ${siblings.map(function(el){// adds sibling's name to person info string
         let fullName = `${el.firstName} ${el.lastName}`
         return fullName;
     })}\n`;
@@ -330,24 +330,21 @@ let descendants = [];
 function findPersonDescendants(person, people){//takes in person/object and people/dataset and finds children and childrens children etc... until no more
     
     let group = [];
-    if(!Array.isArray(person)) group = Array(person);
+    if(!Array.isArray(person)) group = Array(person); // if person input is not an array, turns it into an array for lower logic
     else group = person;
-    let generation = people.filter(function(el){
-        let counter = 0;
+    let generation = people.filter(function(el){ //steps through person's parents and filters people with parent IDs that match input person's parents
         for(let i = 0; i<group.length; i++){
-            if (el.parents.includes(group[i].id)) counter++;
+            if (el.parents.includes(group[i].id)) return true; //assigns everyone to generation
         }
-        if(counter > 0) return true;
     })
-    if(generation.length>0){
+    if(generation.length>0){ //repeats function if generation is not empty
         for(let i = 0; i<generation.length; i++){
-            descendants.push(generation[i])
+            descendants.push(generation[i]) // pushes everyone in generations to descendants array
         }
-        
         findPersonDescendants(generation, people)
     }
-    let descendantsNames = descendants.map(function(el){
+    let descendantsNames = descendants.map(function(el){ //maps descendants array to return first and last names
         return el.firstName +' '+ el.lastName;
     })
-    return `Desecendants: ${descendantsNames}`;
+    return `Descendants: ${descendantsNames}`; //returns descendants list to be displayed
 }
