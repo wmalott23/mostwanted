@@ -67,7 +67,7 @@ function mainMenu(person, people) {
         // Restarts app() from the very beginning
         return app(people);
     }
-    choicesArray = ['info', 'family', 'descendants', 'restart', 'quit']
+    let choicesArray = ['info', 'family', 'descendants', 'restart', 'quit']
     let displayOption = promptFor(
         `Found ${person[0].firstName} ${person[0].lastName}. Do you want to know their 'info', 'family', or 'descendants'?\nType the option you want or type 'restart' or 'quit'.`
     , chars, choicesArray);
@@ -203,13 +203,9 @@ function yesNo(input) {
  * @returns {Boolean}           Default validation -- no logic yet.
  */
 function chars(input, choicesArray) {
-    if(choicesArray.includes(input)) return true;
-    else{
-        alert(`${input} is not a valid entry`)
-        return false
+    return choicesArray.includes(input.toLowerCase());
     }
    ; // Default validation only
-}
 // End of chars()
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
@@ -217,14 +213,13 @@ function chars(input, choicesArray) {
 
 
 function searchByTrait(people) {
-    choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
+    let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars, choicesArray).toLowerCase();
     let traitSearch = '';
 
+    let trait = prompt(`What would you like to search for in ${inputTrait}`).toLowerCase();
 
-    let trait = promptFor(`What would you like to search for in ${inputTrait}`, chars).toLowerCase();
-
-    let foundPeople = people.filter(function (person) {    
+    let foundPeople = people.filter(function (person) {
         if(inputTrait == 'gender') traitSearch = person.gender;
         if(inputTrait == 'height') traitSearch = person.height;
         if(inputTrait == 'weight') traitSearch = person.weight;
@@ -235,11 +230,15 @@ function searchByTrait(people) {
             return true;
         }
     });
+    if(typeof foundPeople[0] == "undefined"){
+        alert("Could not find anyone based on that input");
+        return searchByTrait(people);
+    }
     return foundPeople;
 }
 
 function searchByTraits(people) {
-    choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
+    let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let input = prompt("What would you like to look for? Choose from 'gender', 'dob', 'height', 'weight', 'eyecolor', 'occupation': Please enter like: gender male;dob 1/1/1994").toLowerCase();
     let currentInput = '';
     let traitArray = [];
@@ -262,7 +261,7 @@ function searchByTraits(people) {
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }}
-    
+
     let foundPeople = people.filter(function (person) {   
         let counter = 0 
         for(let i = 0; i<traitArray.length; i++){
