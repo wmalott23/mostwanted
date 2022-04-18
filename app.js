@@ -269,25 +269,14 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
 
 function findPersonFamily(person, people){//receives person/object and people data set returns immediate family members
     let personInfo = "" //adds spouse parent and sibbling names to persons info
-    let spouse = people.filter(function(el){//finds spouse 
-        if(el.id == person.currentSpouse) return true;
-    })
+    let spouse = findSpouse(person,people);
     let spouseName = nameGenerator(spouse);
     personInfo+=`Current Spouse: ${spouseName}\n`;
-
     let parentIDArray = person.parents;
-    let parents = people.filter(function(el){//filters people based on persons parent id
-        if(parentIDArray.includes(el.id)) return true;
-    })
+    let parents = findParents(parentIDArray, people);
     let parentNames = nameGenerator(parents);
     personInfo+=`Parents: ${parentNames}\n`;
-
-    let siblings = people.filter(function(el){//filters people based on persons matching  parent id
-        let counter = 0;
-        for(let i = 0; i<el.parents.length; i++)
-            if(parentIDArray.includes(el.parents[i])) counter++;
-        if(counter > 0) return true;
-    })
+    let siblings = findSiblings(parentIDArray, people);
     let siblingNames = nameGenerator(siblings);
     personInfo+=`Siblings: ${siblingNames}\n`;
     return personInfo;//returns person info to be displayed
@@ -352,4 +341,28 @@ function nameGenerator(peopleArray){
         return el.firstName + ' ' + el.lastName;
 })
     return fullNames;
+}
+
+function findSiblings(parentArray, people){
+    let siblings = people.filter(function(el){//filters people based on persons matching  parent id
+    let counter = 0;
+    for(let i = 0; i<el.parents.length; i++)
+        if(parentArray.includes(el.parents[i])) counter++;
+    if(counter > 0) return true;
+})
+    return siblings;
+}
+
+function findParents(parentArray, people){
+    let parents = people.filter(function(el){//filters people based on persons parent id
+        if(parentArray.includes(el.id)) return true;
+    })
+    return parents;
+}
+
+function findSpouse(person,people){
+    let spouse = people.filter(function(el){//finds spouse 
+    if(el.id == person.currentSpouse) return true;
+    })
+    return spouse;
 }
