@@ -254,10 +254,11 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }
-    if(inputArray.length != traitArray.length){//Ensures that trait array and input array have the same number of inputs
+    for(let i = 0; i<inputArray.length; i++){//Ensures that trait array and input array have the same number of inputs
+        if(inputArray[i] == '' || typeof inputArray[i] == 'undefined'){
         alert("One of the lookup values was invalid");
         return searchByTraits(people)
-    }
+}}
 
     let foundPeople = '';
     for(let i = 0; i<traitArray.length; i++){ // filters people dataset with each trait and each input made by user
