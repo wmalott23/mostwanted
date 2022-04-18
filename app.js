@@ -234,7 +234,6 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
     let currentInput = '';
     let traitArray = [];
     let inputArray = [];
-    let traitSearch = '';
     for(let i = 0; i<input.length; i++){//steps thru user input and  
         if(input[i] != " " && input[i] != ";") currentInput = currentInput + input[i];//concat letters into a word
         if(input[i] == " "){//pushes word before a space into trait array
@@ -253,35 +252,36 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }
-    for(let i = 0; i<traitArray.length; i++){
+    let foundPeople = '';
+    for(let i = 0; i<traitArray.length; i++){ // filters people dataset with each trait and each input made by user
         foundPeople = findPeople(people, traitArray[i], inputArray[i])
-        return foundPeople;//returns persons info
     };
+    return foundPeople;//returns persons info to be displayed in main menu
 }
 
 function findPersonFamily(person, people){//receives person/object and people data set returns immediate family members
+    let personInfo = "" //adds spouse parent and sibbling names to persons info
     let spouse = people.filter(function(el){//finds spouse 
         if(el.id == person.currentSpouse) return true;
     })
+    personInfo+=`Current Spouse: ${spouse.map(function(el){ // adds spouse' name to person info string
+        let fullName = `${el.firstName} ${el.lastName}`
+        return fullName;
+    })}\n`;
     let parentIDArray = person.parents;
     let parents = people.filter(function(el){//filters people based on persons parent id
         if(parentIDArray.includes(el.id)) return true;
     })
+    personInfo+=`Parents: ${parents.map(function(el){// adds parent's name to person info string
+        let fullName = `${el.firstName} ${el.lastName}`
+        return fullName;
+    })}\n`;
     let siblings = people.filter(function(el){//filters people based on persons matching  parent id
         let counter = 0;
         for(let i = 0; i<el.parents.length; i++)
             if(parentIDArray.includes(el.parents[i])) counter++;
         if(counter > 0) return true;
     })
-    let personInfo = "" //adds spouse parent and sibbling names to persons info
-    personInfo+=`Current Spouse: ${spouse.map(function(el){ // adds spouse' name to person info string
-        let fullName = `${el.firstName} ${el.lastName}`
-        return fullName;
-    })}\n`;
-    personInfo+=`Parents: ${parents.map(function(el){// adds parent's name to person info string
-        let fullName = `${el.firstName} ${el.lastName}`
-        return fullName;
-    })}\n`;
     personInfo+=`Siblings: ${siblings.map(function(el){// adds sibling's name to person info string
         let fullName = `${el.firstName} ${el.lastName}`
         return fullName;
@@ -306,9 +306,9 @@ function findPersonFamily(person, people){//receives person/object and people da
 //         return el.firstName +' '+ el.lastName
 //     })
 //     return `Desecendants: ${firstGenNames} , ${secondGenNames} `}
+
 let descendants = [];
 function findPersonDescendants(person, people){//takes in person/object and people/dataset and finds children and childrens children etc... until no more
-    
     let group = [];
     if(!Array.isArray(person)) group = Array(person); // if person input is not an array, turns it into an array for lower logic
     else group = person;
@@ -328,15 +328,18 @@ function findPersonDescendants(person, people){//takes in person/object and peop
     })
     return `Descendants: ${descendantsNames}`; //returns descendants list to be displayed
 }
+
 function findPeople(people, inputTrait, trait){
+    let traitSearch = "";
     let foundPeople = people.filter(function (person) {
-    if(inputTrait == 'gender') traitSearch = person.gender; //filters people data set based on user input and returns person that matches user set
+    if(inputTrait == 'gender') traitSearch = person.gender; //filters people data set based on parameters
     if(inputTrait == 'height') traitSearch = person.height;
     if(inputTrait == 'weight') traitSearch = person.weight;
     if(inputTrait == 'date of birth') traitSearch = person.dob;
     if(inputTrait == 'eyecolor') traitSearch = person.eyeColor;
     if(inputTrait == 'occupation') traitSearch = person.occupation;
-    if (traitSearch == trait) {
-        return foundPeople;
-    }
-})}
+    if(traitSearch == trait) {
+        return true;
+    }})
+    return foundPeople;
+}
