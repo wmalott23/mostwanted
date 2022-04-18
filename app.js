@@ -219,19 +219,8 @@ function chars(input, choicesArray) { // receives user input and array of choice
 function searchByTrait(people) {
     let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars, choicesArray).toLowerCase();
-    let traitSearch = '';
     let trait = prompt(`What would you like to search for in ${inputTrait}`).toLowerCase();
-    let foundPeople = people.filter(function (person) {
-        if(inputTrait == 'gender') traitSearch = person.gender; //filters people data set based on user input and returns person that matches user set
-        if(inputTrait == 'height') traitSearch = person.height;
-        if(inputTrait == 'weight') traitSearch = person.weight;
-        if(inputTrait == 'date of birth') traitSearch = person.dob;
-        if(inputTrait == 'eyecolor') traitSearch = person.eyeColor;
-        if(inputTrait == 'occupation') traitSearch = person.occupation;
-        if (traitSearch == trait) {
-            return true;
-        }
-    });
+    let foundPeople = findPeople(people, inputTrait, trait);
     if(typeof foundPeople[0] == "undefined"){ // repeats function if nobody is found
         alert("Could not find anyone based on that input");
         return searchByTrait(people);
@@ -264,19 +253,10 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }
-    let foundPeople = people.filter(function (person) {  //filters people based on user input traits 
-        let counter = 0 
-        for(let i = 0; i<traitArray.length; i++){
-            if(traitArray[i] == 'gender') traitSearch = person.gender;
-            if(traitArray[i] == 'height') traitSearch = person.height;
-            if(traitArray[i] == 'weight') traitSearch = person.weight;
-            if(traitArray[i] == 'date of birth') traitSearch = person.dob;
-            if(traitArray[i] == 'eyecolor') traitSearch = person.eyeColor;
-            if(traitArray[i] == 'occupation') traitSearch = person.occupation;
-            if(traitSearch == inputArray[i]) counter++;
-        if(counter == traitArray.length) return true;
-    }});
-    return foundPeople;//returns persons info
+    for(let i = 0; i<traitArray.length; i++){
+        foundPeople = findPeople(people, traitArray[i], inputArray[i])
+        return foundPeople;//returns persons info
+    };
 }
 
 function findPersonFamily(person, people){//receives person/object and people data set returns immediate family members
@@ -348,3 +328,15 @@ function findPersonDescendants(person, people){//takes in person/object and peop
     })
     return `Descendants: ${descendantsNames}`; //returns descendants list to be displayed
 }
+function findPeople(people, inputTrait, trait){
+    let foundPeople = people.filter(function (person) {
+    if(inputTrait == 'gender') traitSearch = person.gender; //filters people data set based on user input and returns person that matches user set
+    if(inputTrait == 'height') traitSearch = person.height;
+    if(inputTrait == 'weight') traitSearch = person.weight;
+    if(inputTrait == 'date of birth') traitSearch = person.dob;
+    if(inputTrait == 'eyecolor') traitSearch = person.eyeColor;
+    if(inputTrait == 'occupation') traitSearch = person.occupation;
+    if (traitSearch == trait) {
+        return foundPeople;
+    }
+})}
