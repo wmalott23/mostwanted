@@ -207,9 +207,11 @@ function yesNo(input) {
 // check if the user's choice is within the Array returns true
 function chars(input, choicesArray) { // receives user input and array of choices, validates input against array of choices
     return choicesArray.includes(input.toLowerCase()); //returns true or false to promptFor() if input is validated
-    }
-   ; // Default validation only
+    } // Default validation only
 // End of chars()
+function charDefined(input) { // receives user input and array of choices, validates input against array of choices
+    return (typeof input != "undefined"); //returns true or false to promptFor() if input is validated
+    } // Default validation only
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
@@ -219,7 +221,7 @@ function chars(input, choicesArray) { // receives user input and array of choice
 function searchByTrait(people) {
     let choicesArray = ['gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'];
     let inputTrait = promptFor("What trait would you like to use to find a person? Please choose one: 'gender', 'date of birth', 'height', 'weight', 'eyecolor', 'occupation'?", chars, choicesArray).toLowerCase();
-    let trait = prompt(`What would you like to search for in ${inputTrait}`).toLowerCase();
+    let trait = promptFor(`What would you like to search for in ${inputTrait}`, charDefined, choicesArray).toLowerCase();
     let foundPeople = findPeople(people, inputTrait, trait);
     if(typeof foundPeople[0] == "undefined"){ // repeats function if nobody is found
         alert("Could not find anyone based on that input");
@@ -252,6 +254,11 @@ function searchByTraits(people) { //Search for person/persons by multiple traits
         alert("One of the traits was invalid");
         return searchByTraits(people)
     }
+    if(inputArray.length != traitArray.length){//Ensures that trait array and input array have the same number of inputs
+        alert("One of the lookup values was invalid");
+        return searchByTraits(people)
+    }
+
     let foundPeople = '';
     for(let i = 0; i<traitArray.length; i++){ // filters people dataset with each trait and each input made by user
         foundPeople = findPeople(people, traitArray[i], inputArray[i])
@@ -264,28 +271,24 @@ function findPersonFamily(person, people){//receives person/object and people da
     let spouse = people.filter(function(el){//finds spouse 
         if(el.id == person.currentSpouse) return true;
     })
-    personInfo+=`Current Spouse: ${spouse.map(function(el){ // adds spouse' name to person info string
-        let fullName = `${el.firstName} ${el.lastName}`
-        return fullName;
-    })}\n`;
+    let spouseName = nameGenerator(spouse);
+    personInfo+=`Current Spouse: ${spouseName}\n`;
+
     let parentIDArray = person.parents;
     let parents = people.filter(function(el){//filters people based on persons parent id
         if(parentIDArray.includes(el.id)) return true;
     })
-    personInfo+=`Parents: ${parents.map(function(el){// adds parent's name to person info string
-        let fullName = `${el.firstName} ${el.lastName}`
-        return fullName;
-    })}\n`;
+    let parentNames = nameGenerator(parents);
+    personInfo+=`Parents: ${parentNames}\n`;
+
     let siblings = people.filter(function(el){//filters people based on persons matching  parent id
         let counter = 0;
         for(let i = 0; i<el.parents.length; i++)
             if(parentIDArray.includes(el.parents[i])) counter++;
         if(counter > 0) return true;
     })
-    personInfo+=`Siblings: ${siblings.map(function(el){// adds sibling's name to person info string
-        let fullName = `${el.firstName} ${el.lastName}`
-        return fullName;
-    })}\n`;
+    let siblingNames = nameGenerator(siblings);
+    personInfo+=`Siblings: ${siblingNames}\n`;
     return personInfo;//returns person info to be displayed
 }
 // function findPersonDescendants(person, people){
@@ -342,4 +345,10 @@ function findPeople(people, inputTrait, trait){
         return true;
     }})
     return foundPeople;
+}
+function nameGenerator(peopleArray){
+    let fullNames = peopleArray.map(function(el){// maps parameter array to first and last name
+        return el.firstName + ' ' + el.lastName;
+})
+    return fullNames;
 }
